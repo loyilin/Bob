@@ -41,10 +41,10 @@ namespace Bob
             //设置窗口单击长按监听
             window.AddHandler(System.Windows.Controls.Button.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this.button_get_trade_record_MouseLeftButtonDown), false);
             Console.Out.WriteLine("mainWindow");
-            initKeyEvent();
-            /*hook = new KeyboardHook();
+            /*initKeyEvent();*/
+            hook = new KeyboardHook();
             hook.KeyDownEvent += new System.Windows.Forms.KeyEventHandler(hook_KeyDown);//钩住键按下
-            hook.Start();*/
+            hook.Start();
         }
 
         private void initKeyEvent()
