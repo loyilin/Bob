@@ -41,55 +41,10 @@ namespace Bob
             //设置窗口单击长按监听
             window.AddHandler(System.Windows.Controls.Button.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this.button_get_trade_record_MouseLeftButtonDown), false);
             Console.Out.WriteLine("mainWindow");
-            /*initKeyEvent();*/
+           
             hook = new KeyboardHook();
             hook.KeyDownEvent += new System.Windows.Forms.KeyEventHandler(hook_KeyDown);//钩住键按下
             hook.Start();
-        }
-
-        private void initKeyEvent()
-        {
-            this.Loaded += (sender, e) =>
-            {
-                var wpfHwnd = new WindowInteropHelper(this).Handle;
-
-                var hWndSource = HwndSource.FromHwnd(wpfHwnd);
-                //添加处理程序
-                if (hWndSource != null) hWndSource.AddHook(MainWindowProc);
-
-                hotKeyDic.Add("Alt-S", Win32.GlobalAddAtom("Alt-S"));
-                hotKeyDic.Add("Alt-D", Win32.GlobalAddAtom("Alt-D"));
-                Win32.RegisterHotKey(wpfHwnd, hotKeyDic["Alt-S"], Win32.KeyModifiers.Alt, (int)System.Windows.Forms.Keys.S);
-                Win32.RegisterHotKey(wpfHwnd, hotKeyDic["Alt-D"], Win32.KeyModifiers.Alt, (int)System.Windows.Forms.Keys.D);
-            };
-        }
-        private IntPtr MainWindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            switch (msg)
-            {
-                case Win32.WmHotkey:
-                    {
-                        int sid = wParam.ToInt32();
-                        if (sid == hotKeyDic["Alt-S"])
-                        {
-                            Console.Out.WriteLine("Alt + S");
-                        }
-                        else if (sid == hotKeyDic["Alt-D"])
-                        {
-                            Console.Out.WriteLine("Alt + D");
-                            show_Click();
-                        }
-                        handled = true;
-                        break;
-                    }
-            }
-
-            return IntPtr.Zero;
-        }
-
-        private void Bob_Click(object sender, RoutedEventArgs e)
-        {
-            hide_Click();
         }
 
         // 最小化系统托盘
@@ -160,11 +115,11 @@ namespace Bob
         // 显示窗口
         private void show_Click()
         {
-            this.WindowState = WindowState.Normal;
+            //this.WindowState = WindowState.Normal;
             this.Visibility = Visibility.Visible;
             //解决最小化到任务栏可以强行关闭程序的问题。
-            this.ShowInTaskbar = false;//使Form不在任务栏上显示
-            this.Activate();
+            //this.ShowInTaskbar = false;//使Form不在任务栏上显示
+            //this.Activate();
         }
 
 
@@ -174,7 +129,7 @@ namespace Bob
         {
             this.Visibility = Visibility.Hidden;
             //解决最小化到任务栏可以强行关闭程序的问题。
-            this.ShowInTaskbar = false;//使Form不在任务栏上显示
+            //this.ShowInTaskbar = false;//使Form不在任务栏上显示
         }
 
 
@@ -183,7 +138,7 @@ namespace Bob
         {
             //退出程序
             notifyIcon.Visible = false;
-            /*hook.Stop();*/
+            hook.Stop();
             System.Environment.Exit(0);
         }
 

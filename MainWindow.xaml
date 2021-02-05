@@ -9,11 +9,33 @@
         mc:Ignorable="d"
         x:Name="window"
         KeyDown="MainWindow_KeyDown"
-        Title="MainWindow" Height="450" Width="800"
-        Background="Red"
+        Title="MainWindow" 
+        SizeToContent="WidthAndHeight"
+        Background="Transparent"
+        MinWidth="300"
+        MinHeight="300"
+        Topmost="True"
         >
-    <Grid Name="grid">
-        <Button x:Name="Bob" Content="隐藏" Click="Bob_Click" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5"/>
+    </WindowChrome.WindowChrome>
+    <Border Padding="1" BorderThickness="5,5,5,5" BorderBrush="Gray" CornerRadius="5,5,5,5" Background="Gray">
+        <Grid Width="Auto">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" ></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" BorderBrush="DarkGray" BorderThickness ="1" CornerRadius="5" >
+            <TextBox Name="inputText" Width="Auto" MinHeight="150" FontSize="16" Padding="10" Text="TextBlock"  BorderBrush="Transparent" BorderThickness="0" Background="DarkGray"/>
+            </Border>
+            
+            <TextBlock Grid.Row="1" Text="英文 -> 中文"  Width="Auto" Height="20" VerticalAlignment="Center" />
 
-    </Grid>
+            <Border Grid.Row="2" BorderBrush="DarkGray" BorderThickness ="1" CornerRadius="5" >
+            <TextBlock Name="outText" Width="Auto" MinHeight="150" FontSize="16" Padding="10" Text="TextBlock"  Background="DarkGray"/>
+            </Border>
+        </Grid>
+     
+    </Border>
 </Window>
