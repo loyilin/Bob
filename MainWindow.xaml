@@ -9,33 +9,51 @@
         mc:Ignorable="d"
         x:Name="window"
         KeyDown="MainWindow_KeyDown"
-        Title="MainWindow" 
+        Title="Bob" 
         SizeToContent="WidthAndHeight"
         Background="Transparent"
-        MinWidth="300"
-        MinHeight="300"
+        MinWidth="400"
+        MinHeight="200"
         Topmost="True"
         >
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5"/>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" CornerRadius="5"/>
     </WindowChrome.WindowChrome>
-    <Border Padding="1" BorderThickness="5,5,5,5" BorderBrush="Gray" CornerRadius="5,5,5,5" Background="Gray">
-        <Grid Width="Auto">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" ></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Border Grid.Row="0" BorderBrush="DarkGray" BorderThickness ="1" CornerRadius="5" >
-            <TextBox Name="inputText" Width="Auto" MinHeight="150" FontSize="16" Padding="10" Text="TextBlock"  BorderBrush="Transparent" BorderThickness="0" Background="DarkGray"/>
-            </Border>
-            
-            <TextBlock Grid.Row="1" Text="英文 -> 中文"  Width="Auto" Height="20" VerticalAlignment="Center" />
+    <Border Padding="22" BorderThickness="0" BorderBrush="#27292C" CornerRadius="8" Background="#27292C">
+        <DockPanel LastChildFill="True" >
+            <Grid DockPanel.Dock="Top" Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="Auto" />
+                    <ColumnDefinition  Width="1*" />
+                    <ColumnDefinition  Width="Auto" />
+                    <ColumnDefinition  Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <Border Grid.Row="2" BorderBrush="DarkGray" BorderThickness ="1" CornerRadius="5" >
-            <TextBlock Name="outText" Width="Auto" MinHeight="150" FontSize="16" Padding="10" Text="TextBlock"  Background="DarkGray"/>
+                <Image Name="fixedIV" Grid.Column="0" Width="30" Height="30" Source="/image/fixed.png" PreviewMouseDown="fixedIV_PreviewMouseDown"/>
+                <Image Grid.Column="1" />
+                <Image Name="navIV" Grid.Column="2" Width="30" Height="30" Source="/image/navigation.png" PreviewMouseDown="navIV_PreviewMouseDown"/>
+                <Image Name="packIV" Grid.Column="3" Width="30" Height="30" Margin="20,0,0,0" Source="/image/pack up.png" PreviewMouseDown="packIV_PreviewMouseDown"/>
+            </Grid>
+
+
+            <Border DockPanel.Dock="Top" Name="inputBorder" Padding="1" BorderBrush="#494A4B" BorderThickness="2" CornerRadius="5" >
+                <StackPanel Margin="20" HorizontalAlignment="Stretch">
+                    <TextBox Name="inputText"  MinHeight="70" FontSize="25" Foreground="White" Text="name" TextWrapping="WrapWithOverflow"  Background="#27292C" BorderThickness="0" />
+                    <StackPanel Orientation="Horizontal" Margin="-8,0,0,0">
+                        <Image Width="60" Height="60" Source="/image/sound.png"/>
+                        <Image Width="50" Height="50" VerticalAlignment="Center" Source="/image/copy.png" />
+                    </StackPanel>
+                </StackPanel>
+
             </Border>
-        </Grid>
-     
+
+            <TextBlock DockPanel.Dock="Top" Name="tt" Text="英文 -> 中文"  Height="20" VerticalAlignment="Center" />
+
+            <Border DockPanel.Dock="Top" Name="outBorder" Padding="20" BorderBrush="#494A4B" BorderThickness="2" CornerRadius="5" Background="#333435" >
+                <StackPanel>
+                    <TextBlock Name="outText" MinHeight="100" FontSize="25" Foreground="White" TextWrapping="WrapWithOverflow" Text="没有获取到文本" />
+                </StackPanel>
+            </Border>
+        </DockPanel>
     </Border>
 </Window>

@@ -12,6 +12,7 @@ namespace Bob
         public event KeyEventHandler KeyDownEvent;
         public event KeyPressEventHandler KeyPressEvent;
         public event KeyEventHandler KeyUpEvent;
+        public event Action selectTextEvent;
 
         public delegate int HookProc(int nCode, Int32 wParam, IntPtr lParam);
         static int hKeyboardHook = 0; //声明键盘钩子处理的初始值
@@ -74,6 +75,7 @@ namespace Bob
                 //如果为0，钩子子程与所有的线程关联，即为全局钩子
                 //************************************
                 //如果SetWindowsHookEx失败
+                hKeyboardHook = SetWindowsHookEx(14, KeyboardHookProcedure, GetModuleHandle(System.Diagnostics.Process.GetCurrentProcess().MainModule.ModuleName), 0);
                 if (hKeyboardHook == 0)
                 {
                     Stop();
@@ -115,8 +117,64 @@ namespace Bob
         private const int WM_SYSKEYDOWN = 0x104;//SYSKEYDOWN
         private const int WM_SYSKEYUP = 0x105;//SYSKEYUP
 
+        private const int WM_MOUSEMOVE = 0x0200;	//移动鼠标
+        private const int WM_LBUTTONDOWN = 0x0201; //按下鼠标左键
+        private const int WM_LBUTTONUP = 0x0202; //释放鼠标左键
+        private const int WM_LBUTTONDBLCLK = 0x0203; //双击鼠标左键
+
+        private bool isDown, isUp, isMove;
+        private double lastClick;
         private int KeyboardHookProc(int nCode, Int32 wParam, IntPtr lParam)
         {
+            //if (nCode >= 0 && (wParam == WM_MOUSEMOVE || wParam == WM_LBUTTONDOWN || wParam == WM_LBUTTONUP || wParam == WM_LBUTTONDBLCLK)) Console.WriteLine("鼠标事件：" + wParam);
+            if (nCode >= 0 && (wParam == WM_MOUSEMOVE || wParam == WM_LBUTTONDOWN || wParam == WM_LBUTTONUP || wParam == WM_LBUTTONDBLCLK)) {
+                if (wParam == WM_LBUTTONDOWN)//MOUSE_LEFTBUTTON_DOWN
+                {
+                    //鼠标左键down
+                    Console.WriteLine("鼠标左键down事件");
+                    isDown = true;
+                }
+                if (wParam == WM_LBUTTONUP)
+                {
+                    bool isDoubleClick = false;
+                    //鼠标左键up
+                    Console.WriteLine("鼠标左键up事件");
+
+                    TimeSpan ts1 = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                    if (lastClick == 0) lastClick = ts1.TotalMilliseconds;
+                    else
+                    {
+                        double se = ts1.TotalMilliseconds - lastClick;
+                        lastClick = ts1.TotalMilliseconds;
+                        Console.WriteLine("距离上次点击时间：" + se);
+
+                        if (se < 600)
+                        {
+                            //鼠标双击
+                            Console.WriteLine("鼠标双击事件");
+                            isDoubleClick = true;
+                        }
+                    }
+
+                    if (isMove || isDoubleClick)
+                    {
+                        isMove = false;
+                        isDoubleClick = false;
+                        //执行复制
+                        Console.WriteLine("执行复制");
+                        if (selectTextEvent != null) selectTextEvent();
+                    }
+                   
+                }
+                if (wParam == WM_MOUSEMOVE)
+                {
+                    //鼠标移动
+                    // Console.WriteLine("鼠标移动");
+                    isMove = true;
+                }
+                return 0;
+            }
+
             // 侦听键盘事件
             if ((nCode >= 0) && (KeyDownEvent != null || KeyUpEvent != null || KeyPressEvent != null))
             {
@@ -149,6 +207,20 @@ namespace Bob
                     Keys keyData = (Keys)MyKeyboardHookStruct.vkCode;
                     KeyEventArgs e = new KeyEventArgs(keyData);
                     KeyUpEvent(this, e);
+
+                    if (e.KeyValue == (int)Keys.S && (int)System.Windows.Forms.Control.ModifierKeys == (int)Keys.Alt)
+                    {
+                        return 1;
+
+                    }
+                    else if (e.KeyValue == (int)Keys.D && (int)System.Windows.Forms.Control.ModifierKeys == (int)Keys.Alt)
+                    {
+                        return 1;
+                    }
+                    else if (e.KeyValue == (int)Keys.Escape)
+                    {
+                        return 1;
+                    }
                 }
 
             }
